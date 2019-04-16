@@ -25,28 +25,33 @@ public class Main {
             e.printStackTrace();
             return;
         }
+        String s= null;
 
         try {
-            InputStreamReader is = new InputStreamReader(socket.getInputStream());
-            BufferedReader br = new BufferedReader(is);
 
-            String s= br.readLine();
-            System.out.println("received message: "+ s + " from client!");
-            // esercizio (inizio)
-            OutputStreamWriter sw = new OutputStreamWriter((socket.getOutputStream()));
-            BufferedWriter bw = new BufferedWriter(sw);
-            bw.write("Hi client");
-            bw.flush();
+            while (s!="quit server")
+            {
+                InputStreamReader is = new InputStreamReader(socket.getInputStream());
+                BufferedReader br = new BufferedReader(is);
 
-            //esercizio (fine)
+                s = br.readLine();
+                System.out.println("received message: " + s + " from client!");
+                // esercizio (inizio)
+                OutputStreamWriter sw = new OutputStreamWriter((socket.getOutputStream()));
+                BufferedWriter bw = new BufferedWriter(sw);
+                bw.write("Hi client");
+                bw.flush();
 
-            //var out = new PrintWriter(socket.getOutputStream());
-            //out.println("Hi client");
-            //out.flush();
-            //PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-            //pw.println("Hi Client!");
-            //pw.flush();
 
+                //esercizio (fine)
+
+                if (s!="quit server"){
+                    System.out.println("Server is listening");
+                } else System.out.println("Server is closing...");
+
+                socket = server.accept();//questa è una chiamata bloccante... blocca il server
+
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

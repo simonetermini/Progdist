@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
-
+import java.lang.*;
 public class Client {
 
     public static void main (String[] args){
@@ -24,9 +24,21 @@ public class Client {
 
 
         try {
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-            pw.println("hello server!");
-            pw.flush();
+            String scelta;
+                PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+                System.out.println("Seleziona messaggio da inviare al server");
+                System.out.println("  1-Messaggio Qualsiasi");
+                System.out.println("  2-Esci dal server");
+                Scanner scan = new Scanner(System.in);
+
+                scelta = scan.nextLine();
+                if (scelta == "1") {
+                    pw.println("hello server!");
+                    pw.flush();
+                } else if (scelta == "2") {
+                    pw.println("quit server");
+                    pw.flush();
+                }
             //esercizio (inizio)
             InputStreamReader is = new InputStreamReader(socket.getInputStream());
             BufferedReader br = new BufferedReader(is);
