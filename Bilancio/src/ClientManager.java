@@ -7,6 +7,9 @@ import java.lang.*;
 public class  ClientManager implements Runnable {
     Socket assigned_client;
     Server pr = new Server();
+    Support sp;
+    SupportBalancr spb;
+
 
     @Override
     public void run() {
@@ -20,7 +23,7 @@ public class  ClientManager implements Runnable {
                 String command=null;
                 if (message.length()>3) {
                     command = message.substring(0, 3);
-                    System.out.println("prova stringa " + command);
+                    //System.out.println("prova stringa " + command);
                 }
                 int increm=0;
                 try {
@@ -30,15 +33,13 @@ public class  ClientManager implements Runnable {
 
                         increm = Integer.parseInt(message.substring(4));
                         System.out.println("il bilancio sarà incrementato di: " + increm);
-                        pr.setBalance(increm);
-                        System.out.println("bilancio attuale: " + pr.getBalance());
+                        sp.setProva(increm);
 
 
                     } else if (command.equals("DEC")) {
                         increm = Integer.parseInt(message.substring(4));
                         System.out.println("il bilancio sarà decrementato di: " + increm);
-                        pr.setBalance(-increm);
-                        System.out.println("bilancio attuale: " + pr.getBalance());
+                        sp.setProva(-increm);
                     }
                 }catch (NumberFormatException r)
                 {
@@ -51,7 +52,6 @@ public class  ClientManager implements Runnable {
                 if (message.equalsIgnoreCase("quit")){
                     System.out.println("Terminating ClientManager");
                     cont = false;
-
                     assigned_client.close();
                 }
             }
@@ -64,8 +64,10 @@ public class  ClientManager implements Runnable {
 
 
 
-    public ClientManager(Socket s){
+    public ClientManager(Socket s, Support ss, SupportBalancr spb){
         this.assigned_client = s;
+        this.sp=ss;
+        this.spb=spb;
     }
 
 
