@@ -35,14 +35,23 @@ public class Client {
 
             try {
                 var pw = new PrintWriter(socket.getOutputStream());
+                var in = new Scanner(socket.getInputStream());
 
                 pw.println(message);
                 pw.flush();
 
-                if (message.equalsIgnoreCase("quit")){
+                if (message.equals("QUIT")){
                     System.out.println("Quitting client...");
                     socket.close();
                     break;
+                }
+                String answer =in.nextLine();
+                if (answer.equals("OK")){
+                    System.out.println("confirmed command " + message);
+                }
+                else
+                {
+                    System.out.println("Unexpected answer from server: " + answer);
                 }
 
             } catch (IOException e) {
