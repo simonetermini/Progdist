@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -20,24 +22,24 @@ public class SensorServer {
         return value;
     }
 
-    public void setValue(int value, int i) {
-        this.value[i] = value;
+    public void setValue(int value, int k) {
+        this.value[k] = value;
     }
 
     public String[] getSensType() {
         return sensType;
     }
 
-    public void setSensType(String sensType, int i) {
-        this.sensType[i] = sensType;
+    public void setSensType(String sensType, int k) {
+        this.sensType[k] = sensType;
     }
 
     public String[] getData() {
         return data;
     }
 
-    public void setData(String data, int i) {
-        this.data[i] = data;
+    public void setData(String data, int k) {
+        this.data[k] = data;
     }
 
     private int[] value;
@@ -45,20 +47,16 @@ public class SensorServer {
     private String[] data;
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
     Date today = calendar.getTime();
+    int port ;
 
-    public static void main(String[] args) {
-
-
-
-
-        if (args.length<1){
-            System.out.println("Insert port value");
-            System.out.println("Start server with: >>>java SensorServer <portNumber>");
-            System.exit(-1);
-        }
+    public SensorServer(int port){
+        this.port = port;
+    }
+    public void go() {
 
 
-        int port = Integer.parseInt(args[0]);
+
+
         ServerSocket server = null;
         String[] array;
         int i;
@@ -75,6 +73,7 @@ public class SensorServer {
             System.exit(-1);
         }
 
+
         while (true){
 
             try {
@@ -82,6 +81,10 @@ public class SensorServer {
                 Socket client = server.accept();
                 System.out.println("Connection: OK");
                 System.out.println("Client data: "+ client.getRemoteSocketAddress());
+                SensorAndClientManager myClient = new SensorAndClientManager(client);
+                Thread t = new Thread(myClient);
+                t.start();
+
 
 
 
@@ -94,8 +97,9 @@ public class SensorServer {
 
     }
 
-    public class SensorManager implements Runnable{
+    public class SensorAndClientManager implements Runnable{
         Socket myClient;
+
 
 
         public void run(){
@@ -107,17 +111,25 @@ public class SensorServer {
                 var output = new PrintWriter((myClient.getOutputStream()));
                 output.println("whoareyou");
                 output.flush();
+                Thread.sleep(3000);
                 String mess=input.nextLine();
                 System.out.println("Recived message: " + mess);
-                if (mess.equals("sensor")){
+                if (mess.equals("imasensor")){
+
                     while (input.hasNextLine()){
+                        System.out.println("Waiting for sensor data...");
                    // while (!mess.equalsIgnoreCase("quit")){
                         mess=input.nextLine();
                         if (!mess.equalsIgnoreCase("quit")) {
-                            setSensType(mess.substring(0, 20), getI());
-                            setValue(Integer.parseInt(mess.substring(21, 30)), getI());
-                            setData(today.toString(), getI());
-                            setI(getI() + 1);
+                            int endstring=mess.indexOf("***");
+                            int endvalue=mess.indexOf("///");
+                            int i=getI();
+                            String type=mess.substring(0, endstring);
+                            System.out.println("Received type: "+type);
+                            setSensType(type, i);
+                            setValue(Integer.parseInt((mess.substring(endstring+1, endvalue))), i);
+                            setData(today.toString(), i);
+                            setI(i+ 1);
                             System.out.println("Recived message: " + mess);
                         } else {
                             output.println(">>>Thread: Sensor-client closed");
@@ -128,11 +140,13 @@ public class SensorServer {
                     }
 
                 } else if (mess.equals("normalclient")){
+                    output.println(">>>Thread: Hi normal client!");
+                    output.flush();
 
                 }
 
 
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 
@@ -140,7 +154,41 @@ public class SensorServer {
 
 
         }
+        public SensorAndClientManager(Socket client){
+            this.myClient=client;
+        }
 
 
     }
+    class Saver implements Runnable{
+
+        public void run(){
+            System.out.println("saving file periodically");
+            File f = new File("SensorData.txt");
+            try {
+                FileWriter fw = new FileWriter(f, true);
+                while (true) {
+                    Thread.sleep(10000);
+                    int i=0;
+                    while (i<getI())
+                    {
+                        String toSave="()" + getSensType()[i] + "***" + getValue()[i] + "***" + getData()[i] + " ";
+                        fw.write(toSave);
+                        fw.flush();
+                        i++;
+                    }
+                    fw.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+    }
+
+
 }
