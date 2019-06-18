@@ -1,3 +1,4 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -59,19 +60,15 @@ public class SensClient {
                 toSend=type+"***"+String.valueOf(value)+"///";
                 pw.println(toSend);
                 pw.flush();
+                Thread.sleep(2000);
                 String answer = in.nextLine();
 
-                if (answer.equals("OK")){
-                    System.out.println("confirmed input on system: "+toSend);
+               if (answer.equals("OK")){
+                    System.out.println("confirmed input on system. Type:"+type+ " Value:"+ value);
                 }
-            }catch (IOException e) {
+            }catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-
-
-
-
-
         }
 
 
