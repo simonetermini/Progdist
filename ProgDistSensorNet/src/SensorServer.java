@@ -15,7 +15,7 @@ public class SensorServer {
         }
 
         String sType;
-        int sValue;
+        double sValue;
         String sData;
     }
     private ArrayList<Sensor> sensor = new ArrayList<Sensor>();
@@ -113,7 +113,8 @@ public class SensorServer {
                             Sensor T= new Sensor();
                             T.sData=today.toString();
                             T.sType=type;
-                            T.sValue=Integer.parseInt((mess.substring(endstring+3, endvalue)));
+                            T.sValue=Double.parseDouble((mess.substring(endstring+3, endvalue)));
+                            //T.sValue=Integer.parseInt((mess.substring(endstring+3, endvalue)));
                             setSensor(T);
                             System.out.print("Thread: "+ Thread.currentThread().getName()+ " Sending confirm to client...");
 

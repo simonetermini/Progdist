@@ -42,7 +42,7 @@ public class SensClient {
         while(true){
             String type;
             String toSend=null;
-            int value;
+            double value;
             try {
                 System.out.println("insert sensor type or 'quit' to close connection with server");
                 type=scan.nextLine();
@@ -56,7 +56,8 @@ public class SensClient {
                     break;
                 }
                 System.out.println("insert value for sensor " + type);
-                value=Integer.parseInt(scan.nextLine());
+                //value=Integer.parseInt(scan.nextLine());
+                value=Double.parseDouble(scan.nextLine());
                 toSend=type+"***"+String.valueOf(value)+"///";
                 pw.println(toSend);
                 pw.flush();
