@@ -67,7 +67,7 @@ public class NormClient {
             }catch (IOException  e ){
                 e.printStackTrace();
             }
-            System.out.println("prova uscita try-catch");
+
         }
     }
 }
