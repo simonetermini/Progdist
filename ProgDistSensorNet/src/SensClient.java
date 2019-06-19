@@ -56,7 +56,6 @@ public class SensClient {
                     break;
                 }
                 System.out.println("insert value for sensor " + type);
-                //value=Integer.parseInt(scan.nextLine());
                 value=Double.parseDouble(scan.nextLine());
                 toSend=type+"***"+String.valueOf(value)+"///";
                 pw.println(toSend);

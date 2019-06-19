@@ -1,6 +1,6 @@
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.io.InterruptedIOException;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -50,7 +50,10 @@ public class NormClient {
                         client.close();
                         break;
                     }else if (command.equalsIgnoreCase("send")){
-                        PrintWriter ppw=new PrintWriter("ReceivedFile.txt");
+                        System.out.print("Insert name for the output file: ");
+                        String nomefile = scan.nextLine();
+                        PrintWriter ppw=new PrintWriter(nomefile+".txt");
+                        System.out.println("File created!");
                         while (true){
                             String answer = in.nextLine();
                             if (answer.equalsIgnoreCase("***EOF***"))
