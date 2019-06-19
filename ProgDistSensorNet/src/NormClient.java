@@ -22,7 +22,7 @@ public class NormClient {
             client = new Socket(address, port);
             in = new Scanner(client.getInputStream());
             pw = new PrintWriter(client.getOutputStream());
-            Thread.sleep(2000);
+            Thread.sleep(500);
             String question= in.nextLine();
 
             if (question.equals("whoareyou"))
@@ -39,51 +39,36 @@ public class NormClient {
             e.printStackTrace();
             System.exit(-1);
         }
-
-
-
         while(true){
             try {
                     System.out.println("insert 'send' to ask sensors information from the server or 'quit' to close connection with server");
                     String command = scan.nextLine();
+                    pw.println(command);
+                    pw.flush();
                     if (command.equalsIgnoreCase("quit")) {
                         System.out.println("Quitting connection with server at address: " + address + " and port: " + port);
-                        System.out.println("Quitting client...");
-                        pw.println("quit");
-                        pw.flush();
                         client.close();
                         break;
                     }else if (command.equalsIgnoreCase("send")){
-                        pw.println(command);
-                        pw.flush();
-                        //Thread.sleep(1000);
-                        FileWriter fw = new FileWriter("ReceivedFile.txt", false);
-                        while (in.hasNext()  &&  !in.nextLine().equals("]")){
+                        PrintWriter ppw=new PrintWriter("ReceivedFile.txt");
+                        while (true){
                             String answer = in.nextLine();
-                            System.out.println("Received Data" + answer);
-                            fw.write(answer+"\n");
-                            fw.flush();
+                            if (answer.equalsIgnoreCase("***EOF***"))
+                                break;
+
+                            else {
+                                System.out.println("Received Data" + answer);
+                                ppw.write(answer + "\n");
+                                ppw.flush();
+                            }
                         }
-                        //fw.close();
                     }else{
-                        System.out.println("insert a valid command");
                     }
-            }catch (IOException  e ){// InterruptedException e) {
+            }catch (IOException  e ){
                 e.printStackTrace();
             }
-
-
-
-
-
+            System.out.println("prova uscita try-catch");
         }
-
-
-
-
-
-
-
     }
 }
 

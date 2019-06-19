@@ -11,7 +11,7 @@ public class SensorServer {
         public String toString(){
             return(" \n >Sensor Type= " +sType+
                     "\n >Sensor value= " +sValue +
-                    "\n >Data= "+ sData)+" \n ";
+                    "\n >Data= "+ sData)+"\n";
         }
 
         String sType;
@@ -68,7 +68,7 @@ public class SensorServer {
                 System.out.println("Connection: OK");
                 System.out.println("Client info: "+ client.getRemoteSocketAddress());
                 SensorAndClientManager myClient = new SensorAndClientManager(client);
-                Thread t = new Thread(myClient);
+                Thread t = new Thread(myClient, String.valueOf(threadNumber));
                 t.start();
                 threadNumber++;
 
@@ -91,20 +91,19 @@ public class SensorServer {
 
         public void run(){
 
-            //System.out.println("Thread:"+ Thread.currentThread().getName()+ "Starting Sensor Manager");
-            System.out.println("WAITING FOR CLIENT TYPE");
+            System.out.println("Thread: "+ Thread.currentThread().getName()+ " Starting Sensor Manager");
+            System.out.println("Thread: "+ Thread.currentThread().getName()+ " WAITING FOR CLIENT TYPE");
             try {
                 Scanner input = new Scanner(myClient.getInputStream());
                 PrintWriter output = new PrintWriter((myClient.getOutputStream()));
                 output.println("whoareyou");
                 output.flush();
-                Thread.sleep(3000);
+                Thread.sleep(1500);
                 String mess=input.nextLine();
-                //System.out.println("Recived message: " + mess);
                 if (mess.equals("imasensor")){
-                    System.out.println("The client is a Sensor Client");
-                    while (input.hasNextLine()){
-                        System.out.println("Waiting for sensor data...");
+                    System.out.println("Thread: "+ Thread.currentThread().getName()+ " The client is a Sensor Client");
+                    while (true){
+                        System.out.println("Thread: "+ Thread.currentThread().getName()+ " Waiting for sensor data...");
                         mess=input.nextLine();
                         if (!mess.equalsIgnoreCase("quit")) {
                             int endstring=mess.indexOf("***");
@@ -116,7 +115,7 @@ public class SensorServer {
                             T.sType=type;
                             T.sValue=Integer.parseInt((mess.substring(endstring+3, endvalue)));
                             setSensor(T);
-                            System.out.print("Sending confirm to client...");
+                            System.out.print("Thread: "+ Thread.currentThread().getName()+ " Sending confirm to client...");
 
                             output.println("OK");
                             output.flush();
@@ -124,7 +123,7 @@ public class SensorServer {
                             System.out.println(" >>>SENT!");
 
                         } else {
-                            System.out.println("Thread:"+ Thread.currentThread().getName()+ "Sensor-client closed");
+                            System.out.println("Thread: "+ Thread.currentThread().getName()+ " Sensor-client closed");
 
                             break;
                         }
@@ -133,36 +132,33 @@ public class SensorServer {
                     }
 
                 } else if (mess.equals("imanormalclient")){
-                    /*output.println(">>>Thread: Hi normal client!");
-                    output.flush();*/
-                    System.out.println("The client is a Normal Client");
-                    while (true) {
-
-                        System.out.println("Waiting for command from NormalCLient: " + myClient.getRemoteSocketAddress());
-                        Thread.sleep(1500);
-                        String command=input.nextLine();
+                    System.out.println("Thread: "+ Thread.currentThread().getName()+ " The client is a Normal Client");
+                    while(true) {
+                        System.out.println("Thread: "+ Thread.currentThread().getName()+ " Waiting for Command");
+                        String command = input.nextLine();
+                        System.out.println("Thread: "+ Thread.currentThread().getName()+ " Received command: " + command);
                         if (command.equalsIgnoreCase("send")) {
-                            FileReader fr = new FileReader("SensorData.txt");
-                            BufferedReader br = new BufferedReader(fr);
-                            while (br.read()!=-1) {
-                                String prova = br.readLine();
-                                if (prova.equalsIgnoreCase("]")) {
-                                System.out.println("finish sending");
-                                break;
-                                }
-                                output.println(prova);
-                                output.flush();
-                        }
-                        //fr.close();
-                        } else if (command.equalsIgnoreCase("quit")) {
-                            System.out.println("Thread:"+ Thread.currentThread().getName()+ "Thread: Closing connection with client");
-                            break;
-                        }else{
-                            System.out.println("command not accepted: "+ input);
+                            Scanner scan = new Scanner(new FileReader("SensorData.txt"));
+                            String toSend;
+                            while (scan.hasNextLine()) {
+                                toSend = scan.nextLine();
+                                if (toSend == null)
+                                    break;
+                                else {
 
+                                    output.println(toSend);
+                                    output.flush();
+                                    System.out.println("SENT: " + toSend);
+                                }
+                            }
+                            output.println("***EOF***");
+                            output.flush();
+
+                        } else if (command.equalsIgnoreCase("quit")) {
+                            System.out.println("Thread:" + Thread.currentThread().getName() + "Thread: Closing connection with client");
+                            break;
                         }
                     }
-
 
                 }
 
@@ -186,8 +182,6 @@ public class SensorServer {
 
         public void run(){
             System.out.println(">>>Thread SAVER: saving file periodically");
-            //File f =new File("SensorData.txt");
-            //FileWriter fw=new FileWriter(f, false);
 
             try {
                 while(true){
@@ -195,11 +189,8 @@ public class SensorServer {
                     realSaver sv =new realSaver();
                     Thread th =new Thread(sv);
                     th.run();
-                    //fw.write(getSensor().toString());
-                    //fw.flush();
+
                 }
-            //}catch (IOException e) {
-              //  e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

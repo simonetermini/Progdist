@@ -21,7 +21,7 @@ public class SensClient {
             client = new Socket(address, port);
             in = new Scanner(client.getInputStream());
             pw = new PrintWriter(client.getOutputStream());
-            Thread.sleep(2000);
+            Thread.sleep(500);
             String question= in.nextLine();
 
             if (question.equals("whoareyou"))
