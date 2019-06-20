@@ -40,13 +40,45 @@ public class SensClient {
         }
 
         while(true){
-            String type;
+            String type=null;
             String toSend=null;
-            double value;
+            double value=0;
             try {
-                System.out.println("insert sensor type or 'quit' to close connection with server");
-                type=scan.nextLine();
-                if (type.equalsIgnoreCase("quit"))
+                System.out.println(">>>Make your choice");
+                System.out.println(">(1) To insert a 'Type' and a 'Value' for a sensor");
+                System.out.println(">(2) To quit the connection with the server: "+ client.getRemoteSocketAddress());
+                System.out.print(">>>(1/2): ");
+                int c=Integer.parseInt(scan.nextLine());
+                switch(c){
+                    case (2):
+
+                        System.out.println("Quitting connection with server at address: "+ address + " and port: " + port);
+                        System.out.println("Quitting client...");
+                        pw.println("quit");
+                        pw.flush();
+                        client.close();
+                        System.exit(1);
+                    case (1):
+                        System.out.println("insert sensor type");
+                        type=scan.nextLine();
+                        System.out.print("insert value for sensor " + type + ": ");
+                        value=Double.parseDouble(scan.nextLine());
+                        toSend=type+"***"+String.valueOf(value)+"///";
+                        pw.println(toSend);
+                        pw.flush();
+                        Thread.sleep(2000);
+                        String answer = in.nextLine();
+
+                        if (answer.equals("OK")){
+                            System.out.println("confirmed input on system. Type:"+type+ " Value:"+ value);
+                        }
+
+
+
+                }
+
+
+                /*if (type.equalsIgnoreCase("quit"))
                 {
                     System.out.println("Quitting connection with server at address: "+ address + " and port: " + port);
                     System.out.println("Quitting client...");
@@ -65,11 +97,13 @@ public class SensClient {
 
                if (answer.equals("OK")){
                     System.out.println("confirmed input on system. Type:"+type+ " Value:"+ value);
-                }
+                }*/
             }catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
+
 
 
 

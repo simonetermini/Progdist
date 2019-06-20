@@ -156,7 +156,7 @@ public class SensorServer {
                             output.flush();
 
                         } else if (command.equalsIgnoreCase("quit")) {
-                            System.out.println("Thread:" + Thread.currentThread().getName() + "Thread: Closing connection with client");
+                            System.out.println("Thread:" + Thread.currentThread().getName() + " Closing connection with client");
                             break;
                         }
                     }

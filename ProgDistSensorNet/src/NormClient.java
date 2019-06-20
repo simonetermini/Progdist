@@ -41,7 +41,37 @@ public class NormClient {
         }
         while(true){
             try {
-                    System.out.println("insert 'send' to ask sensors information from the server or 'quit' to close connection with server");
+                System.out.println(">>>Make your choice");
+                System.out.println(">(1) To create a file with the sensors data in the server");
+                System.out.println(">(2) To quit the connection with the server: "+ client.getRemoteSocketAddress());
+                System.out.print(">>>(1/2): ");
+                int c=Integer.parseInt(scan.nextLine());
+                switch(c){
+                    case (2):
+                        pw.println("quit");
+                        pw.flush();
+                        System.out.println("Quitting connection with server at address: " + address + " and port: " + port);
+                        client.close();
+                        System.exit(1);
+                    case (1):
+                        pw.println("send");
+                        pw.flush();
+                        System.out.print("Insert name for the output file: ");
+                        String nomefile = scan.nextLine();
+                        PrintWriter ppw=new PrintWriter(nomefile+".txt");
+                        System.out.println("File created!");
+                        while (true){
+                            String answer = in.nextLine();
+                            if (answer.equalsIgnoreCase("***EOF***"))
+                                break;
+
+                            else {
+                                System.out.println("Received Data" + answer);
+                                ppw.write(answer + "\n");
+                                ppw.flush();
+                            }
+                        }
+                    /*System.out.println("insert 'send' to ask sensors information from the server or 'quit' to close connection with server");
                     String command = scan.nextLine();
                     pw.println(command);
                     pw.flush();
@@ -66,7 +96,7 @@ public class NormClient {
                             }
                         }
                     }else{
-                    }
+                   */ }
             }catch (IOException  e ){
                 e.printStackTrace();
             }
