@@ -71,32 +71,7 @@ public class NormClient {
                                 ppw.flush();
                             }
                         }
-                    /*System.out.println("insert 'send' to ask sensors information from the server or 'quit' to close connection with server");
-                    String command = scan.nextLine();
-                    pw.println(command);
-                    pw.flush();
-                    if (command.equalsIgnoreCase("quit")) {
-                        System.out.println("Quitting connection with server at address: " + address + " and port: " + port);
-                        client.close();
-                        break;
-                    }else if (command.equalsIgnoreCase("send")){
-                        System.out.print("Insert name for the output file: ");
-                        String nomefile = scan.nextLine();
-                        PrintWriter ppw=new PrintWriter(nomefile+".txt");
-                        System.out.println("File created!");
-                        while (true){
-                            String answer = in.nextLine();
-                            if (answer.equalsIgnoreCase("***EOF***"))
-                                break;
-
-                            else {
-                                System.out.println("Received Data" + answer);
-                                ppw.write(answer + "\n");
-                                ppw.flush();
-                            }
-                        }
-                    }else{
-                   */ }
+                     }
             }catch (IOException  e ){
                 e.printStackTrace();
             }

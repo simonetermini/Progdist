@@ -78,26 +78,7 @@ public class SensClient {
                 }
 
 
-                /*if (type.equalsIgnoreCase("quit"))
-                {
-                    System.out.println("Quitting connection with server at address: "+ address + " and port: " + port);
-                    System.out.println("Quitting client...");
-                    pw.println("quit");
-                    pw.flush();
-                    client.close();
-                    break;
-                }
-                System.out.println("insert value for sensor " + type);
-                value=Double.parseDouble(scan.nextLine());
-                toSend=type+"***"+String.valueOf(value)+"///";
-                pw.println(toSend);
-                pw.flush();
-                Thread.sleep(2000);
-                String answer = in.nextLine();
 
-               if (answer.equals("OK")){
-                    System.out.println("confirmed input on system. Type:"+type+ " Value:"+ value);
-                }*/
             }catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
