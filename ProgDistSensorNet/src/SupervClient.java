@@ -5,11 +5,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class NormClient {
+public class SupervClient {
     public static void main (String[] args){
         if (args.length<2){
             System.out.println("Insert address and port of the server");
-            System.out.println("Protocol: \"java NormClient address port\" ");
+            System.out.println("Protocol: \"java SupervClient address port\" ");
             System.exit(-1);
         }
         String address=args[0];
@@ -27,7 +27,7 @@ public class NormClient {
 
             if (question.equals("whoareyou"))
             {
-                pw.println("imanormalclient");
+                pw.println("imasupervisor");
                 pw.flush();
             }else{
                 System.out.println(">>>Server not corresponding to communication protocol...");

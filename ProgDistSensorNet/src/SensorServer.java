@@ -9,12 +9,12 @@ public class SensorServer {
     public class Sensor{
 
         public String toString(){
-            return(" \n >Sensor Type= " +sType+
+            return(" \n >Sensor ID= " +sID+
                     "\n >Sensor value= " +sValue +
                     "\n >Data= "+ sData)+"\n";
         }
 
-        String sType;
+        String sID;
         double sValue;
         String sData;
     }
@@ -28,8 +28,11 @@ public class SensorServer {
         this.sensor.add(T);
     }
 
-    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
-    Date today = calendar.getTime();
+
+
+
+    /*Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
+    Date today = calendar.getTime();*/
     int port ;
 
 
@@ -106,13 +109,15 @@ public class SensorServer {
                         System.out.println("Thread: "+ Thread.currentThread().getName()+ " Waiting for sensor data...");
                         mess=input.nextLine();
                         if (!mess.equalsIgnoreCase("quit")) {
+                            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
+                            Date today = calendar.getTime();
                             int endstring=mess.indexOf("***");
                             int endvalue=mess.indexOf("///");
-                            String type=mess.substring(0, endstring);
-                            System.out.println("Thread:"+ Thread.currentThread().getName()+ "Received type: "+type);
+                            String ID=mess.substring(0, endstring);
+                            System.out.println("Thread:"+ Thread.currentThread().getName()+ "Received ID: "+ID);
                             Sensor T= new Sensor();
                             T.sData=today.toString();
-                            T.sType=type;
+                            T.sID=ID;
                             T.sValue=Double.parseDouble((mess.substring(endstring+3, endvalue)));
                             //T.sValue=Integer.parseInt((mess.substring(endstring+3, endvalue)));
                             setSensor(T);
@@ -132,8 +137,8 @@ public class SensorServer {
 
                     }
 
-                } else if (mess.equals("imanormalclient")){
-                    System.out.println("Thread: "+ Thread.currentThread().getName()+ " The client is a Normal Client");
+                } else if (mess.equals("imasupervisor")){
+                    System.out.println("Thread: "+ Thread.currentThread().getName()+ " The client is a Supervisor Client");
                     while(true) {
                         System.out.println("Thread: "+ Thread.currentThread().getName()+ " Waiting for Command");
                         String command = input.nextLine();

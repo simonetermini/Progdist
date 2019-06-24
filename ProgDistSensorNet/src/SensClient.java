@@ -40,12 +40,12 @@ public class SensClient {
         }
 
         while(true){
-            String type=null;
+            String ID=null;
             String toSend=null;
             double value=0;
             try {
                 System.out.println(">>>Make your choice");
-                System.out.println(">(1) To insert a 'Type' and a 'Value' for a sensor");
+                System.out.println(">(1) To insert an 'ID' and a 'Value' for a sensor");
                 System.out.println(">(2) To quit the connection with the server: "+ client.getRemoteSocketAddress());
                 System.out.print(">>>(1/2): ");
                 int c=Integer.parseInt(scan.nextLine());
@@ -59,18 +59,18 @@ public class SensClient {
                         client.close();
                         System.exit(1);
                     case (1):
-                        System.out.println("insert sensor type");
-                        type=scan.nextLine();
-                        System.out.print("insert value for sensor " + type + ": ");
+                        System.out.println("insert sensor ID");
+                        ID=scan.nextLine();
+                        System.out.print("insert value for sensor " + ID + ": ");
                         value=Double.parseDouble(scan.nextLine());
-                        toSend=type+"***"+String.valueOf(value)+"///";
+                        toSend=ID+"***"+String.valueOf(value)+"///";
                         pw.println(toSend);
                         pw.flush();
                         Thread.sleep(2000);
                         String answer = in.nextLine();
 
                         if (answer.equals("OK")){
-                            System.out.println("confirmed input on system. Type:"+type+ " Value:"+ value);
+                            System.out.println("confirmed input on system. ID:"+ID+ " Value:"+ value);
                         }
 
 
